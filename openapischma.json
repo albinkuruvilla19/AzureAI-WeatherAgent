@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OpenWeatherMap Current Weather API",
+    "description": "API to fetch current weather data by latitude and longitude",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.openweathermap.org"
+    }
+  ],
+  "paths": {
+    "/data/2.5/weather": {
+      "get": {
+        "summary": "Get current weather by coordinates",
+        "description": "Returns current weather data for the given latitude and longitude",
+        "operationId": "getCurrentWeatherByCoordinates",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            },
+            "description": "Latitude of the location"
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            },
+            "description": "Longitude of the location"
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["standard", "metric", "imperial"],
+              "default": "metric"
+            },
+            "description": "Units of measurement (metric = Celsius)"
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with current weather data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "coord": {
+                      "type": "object",
+                      "properties": {
+                        "lon": { "type": "number" },
+                        "lat": { "type": "number" }
+                      }
+                    },
+                    "weather": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "main": { "type": "string" },
+                          "description": { "type": "string" },
+                          "icon": { "type": "string" }
+                        }
+                      }
+                    },
+                    "main": {
+                      "type": "object",
+                      "properties": {
+                        "temp": { "type": "number" },
+                        "feels_like": { "type": "number" },
+                        "humidity": { "type": "integer" }
+                      }
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized – Invalid API key"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "appid"
+      }
+    }
+  }
+}
